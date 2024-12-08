@@ -5,8 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace sample_console_generic_host
 {
-    public class ConsoleHostedService(ILogger<ConsoleHostedService> _Logger, IHostApplicationLifetime _AppLifetime,
-        IOptions<AppConfig> _Options) : IHostedService
+    public class ConsoleHostedService(IHostApplicationLifetime _AppLifetime) : IHostedService
     {
         public async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -29,20 +28,17 @@ namespace sample_console_generic_host
             catch (Exception e)
             {
                 Console.Error.WriteLine(e.Message);
-                _Logger.LogError($"Unhandled Exception, {e}");
 
                 Environment.ExitCode = (int) ExitCode.Exception;
             }
             finally
             {
-                _Logger.LogInformation($"Exit, Code={Environment.ExitCode}");
                 _AppLifetime.StopApplication();
             }
 
             async Task StartedAsync()
             {
                 var args = Environment.GetCommandLineArgs();
-                _Logger.LogInformation($"Start, {string.Join(" ", args)}, {_Options.Value.Other1}");
                 await Task.CompletedTask;
             }
         }

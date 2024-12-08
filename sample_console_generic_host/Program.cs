@@ -9,20 +9,8 @@ global using System.Threading.Tasks;
 global using System.IO;
 global using System.Diagnostics;
 global using sample_console_generic_host;
-using Microsoft.Extensions.Configuration;
 
 _ = Host.CreateDefaultBuilder(args)
-    .ConfigureLogging((context, logging) =>
-    {
-        logging.ClearProviders();
-        logging.AddConfiguration(context.Configuration.GetSection("Logging"));
-        logging.AddConsole();
-    })
-    .ConfigureAppConfiguration((context, config) =>
-    {
-        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddUserSecrets<Program>(optional: true, reloadOnChange: true);
-    })
     .ConfigureServices(ConfigureServices)
     .RunConsoleAsync();
 
@@ -30,6 +18,5 @@ _ = Host.CreateDefaultBuilder(args)
 void ConfigureServices(HostBuilderContext context, IServiceCollection services)
 {
     services.AddHostedService<ConsoleHostedService>();
-    services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
 
 }
